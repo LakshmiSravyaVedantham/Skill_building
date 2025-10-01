@@ -35,3 +35,13 @@ Important notes
 
 - The `cryptography` package is optional for demo runs; the code will fallback to base64 encoding when unavailable — this is NOT secure and only for local testing.
 - Do not use this code as-is in production for handling real PII or client data without additional safeguards and legal review.
+
+Contributing
+
+1. Create a branch for your change: `git checkout -b feature/your-change`
+2. Run tests: `python -m pytest -q`
+3. Commit and push to a branch and open a pull request.
+
+Contact
+
+For questions about this demo, open an issue in the repository.
