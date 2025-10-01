@@ -1,0 +1,10 @@
+# Ignore local envs and system files
+.venv/
+__pycache__/
+.DS_Store
+
+# Ignore Amazon local folder if present
+Amazon/
+
+# Editor directories
+.vscode/
