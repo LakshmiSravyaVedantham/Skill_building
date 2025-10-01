@@ -1,33 +1,37 @@
-# ETL_SQL - RAG Secure Demo
+# Security — RAG security demo
 
-This small demo contains a minimal RAG-like wrapper focused on local security checks for legal contexts.
+This repository contains a small demo showing hardened local checks for RAG (Retrieval-Augmented Generation) in a legal context. It is intended for demonstration and testing only.
 
-Files added/modified:
+Quick start
 
-How to run tests:
+1. Create a virtual environment and activate it:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+2. Install dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
-pytest -q
 ```
 
-Notes:
-Usage (demo):
+3. Run tests:
 
-```python
-from main import EncryptedVectorStore, RAGSecureWrapper
-import numpy as np, hashlib
-
-docs = ["Client: John Doe.", "Neutral note."]
-embs = [[1.0, 0.0], [0.0, 1.0]]
-key = "lawfirm_secret_key"
-evs = EncryptedVectorStore(docs, embs, encryption_key=key)
-wrapper = RAGSecureWrapper(evs, encryption_key=key)
-q_emb = np.array([1.0, 0.0])
-token = hashlib.sha256(("attorney" + key).encode()).hexdigest()
-print(wrapper.query("Summarize", q_emb, user_role="attorney", auth_token=token))
+```bash
+python -m pytest -q
 ```
+
+Usage (demo)
+
+See `main.py` for a minimal example. In short, create an `EncryptedVectorStore`, wrap it with `RAGSecureWrapper`, and call `query()` with a valid auth token (the tests show a small example).
 
 CI
 
-This repository includes a GitHub Actions workflow that runs tests on push and pull requests. After the workflow runs you will see test results in the Checks tab.
+This repository includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs the test suite for pull requests and pushes.
+
+Important notes
+
+- The `cryptography` package is optional for demo runs; the code will fallback to base64 encoding when unavailable — this is NOT secure and only for local testing.
+- Do not use this code as-is in production for handling real PII or client data without additional safeguards and legal review.
