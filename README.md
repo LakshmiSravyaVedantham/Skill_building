@@ -61,108 +61,53 @@ Amazon/
 ```bash
 docker build -t amazon-etl .
 ```
+#!/usr/bin/env bash
 
-### 2. Neon Database Setup
-The project now uses Neon Database (serverless PostgreSQL). No local PostgreSQL container is needed.
-Configure your Neon connection string in the `.env` file:
-```bash
-NEON_DATABASE_URL=postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require
-```
+# Security — RAG security demo
 
-### 3. Run ETL container
-```bash
-docker run --rm \
-  --link amazon_postgres:postgres \
-  -e DB_HOST=postgres \
-  -e DB_USER=username \
-  -e DB_PASSWORD=password \
-  -e DB_NAME=mydb \
-  -v $(pwd)/data:/app/data \
-  amazon-etl
-```
+This repository contains a small demo showing hardened local checks for RAG (Retrieval-Augmented Generation) in a legal context. It is intended for demonstration and testing only.
 
-## Environment Variables
+Quick start
 
-The following environment variables can be configured:
-
-- `NEON_DATABASE_URL`: Complete Neon database connection string
-- `DB_HOST`: Neon database hostname
-- `DB_USER`: Neon database username
-- `DB_PASSWORD`: Neon database password
-- `DB_NAME`: Neon database name
-- `DB_PORT`: Database port (default: 5432)
-- `CSV_PATH`: Path to CSV file (default: ./data/amazon.csv)
-
-## Docker Login (Optional)
-
-If you need to push images to Docker Hub:
+1. Create a virtual environment and activate it:
 
 ```bash
-docker login -u loginid
-# Enter password: password
+python -m venv .venv
+source .venv/bin/activate
 ```
 
-## Troubleshooting
+2. Install dependencies:
 
-1. **Docker daemon not running**
-   - Start Docker Desktop application
-   - Wait for Docker to fully initialize
+```bash
+python -m pip install -r requirements.txt
+```
 
-2. **Permission denied errors**
-   - Ensure Docker Desktop has proper permissions
+3. Run tests:
+
+```bash
+python -m pytest -q
+```
+
+Usage (demo)
+
+See `main.py` for a minimal example. In short, create an `EncryptedVectorStore`, wrap it with `RAGSecureWrapper`, and call `query()` with a valid auth token (the tests show a small example).
+
+CI
+
+This repository includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs the test suite for pull requests and pushes.
+
+Important notes
+
+- The `cryptography` package is optional for demo runs; the code will fallback to base64 encoding when unavailable — this is NOT secure and only for local testing.
+- Do not use this code as-is in production for handling real PII or client data without additional safeguards and legal review.
+
+Contributing
+
+1. Create a branch for your change: `git checkout -b feature/your-change`
+2. Run tests: `python -m pytest -q`
+3. Commit and push to a branch and open a pull request.
+
+Contact
+
+For questions about this demo, open an issue in the repository.
    - Try running with `sudo` if on Linux
-
-3. **Port conflicts**
-   - Check if ports 5432 or 3000 are already in use
-   - Modify port mappings in docker-compose.yml if needed
-
-4. **CSV file not found**
-   - Ensure `amazon.csv` exists in the `data/` directory
-   - Check file permissions
-
-## Database Tables
-
-### Amazon ETL Tables
-- `raw_products`: Contains all processed Amazon product data (1,463 records)
-- `discount_analysis`: Contains aggregated discount analysis (339 records)
-
-### NYC Taxi ETL Tables
-- `raw_trips`: Contains taxi trip data (1,000 sample records)
-- `hourly_analysis`: Contains trip patterns by hour (24 records)
-- `zonal_analysis`: Contains trip patterns by pickup zone (265+ records)
-
-## 📊 Data Insights & Analysis
-
-This ETL pipeline processes two distinct datasets providing valuable business insights:
-
-### 🛍️ Amazon Product Data Analysis
-- **1,463 products** across electronics and accessories categories
-- **Discount Analysis**: 58% of products offer >50% discounts
-- **Customer Satisfaction**: 89% of products rated 4+ stars
-- **Price Range**: Most products between ₹150-₹500
-- **Top Categories**: USB cables, charging accessories, networking devices
-
-### 🚕 NYC Taxi Trip Analysis
-- **1,000 trip records** with temporal and geographical patterns
-- **Peak Hours**: 8-9 AM and 6-7 PM show highest demand
-- **Fare Patterns**: Airport trips average 40% higher fares
-- **Zone Coverage**: 265+ unique pickup locations across NYC
-- **Seasonal Trends**: Spring data shows consistent demand patterns
-
-**[📈 View Complete Data Analysis →](DATA_ANALYSIS_README.md)**
-
-### NYC Taxi ETL Tables
-- `raw_trips`: Contains processed taxi trip data
-- `hourly_analysis`: Contains hourly aggregated trip statistics
-- `zonal_analysis`: Contains zone-based trip analysis
-
-## Stopping Services
-
-```bash
-docker-compose down
-```
-
-To remove volumes as well:
-```bash
-docker-compose down -v
-```
