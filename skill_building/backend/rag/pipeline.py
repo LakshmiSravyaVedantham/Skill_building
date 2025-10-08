@@ -11,7 +11,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+# Check for HuggingFace API token
+hf_token = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+if not hf_token or hf_token == "your_token_here":
+    print("WARNING: HuggingFace API token not set. Please add it to backend/.env")
+    print("Get your token from: https://huggingface.co/settings/tokens")
+else:
+    os.environ["HUGGINGFACEHUB_API_TOKEN"] = hf_token
 
 # Load and split documents
 def load_documents(directory=None):
@@ -81,8 +87,19 @@ def query_rag(question, hybrid_retriever):
     return qa_chain({"query": question})
 
 # Initialize on startup
-docs = load_documents()
-hybrid_retriever = build_hybrid_retriever(docs)
+try:
+    print("Initializing RAG pipeline...")
+    docs = load_documents()
+    if len(docs) == 0:
+        print("WARNING: No documents loaded. RAG system may not work properly.")
+        hybrid_retriever = None
+    else:
+        hybrid_retriever = build_hybrid_retriever(docs)
+        print(f"RAG pipeline initialized successfully with {len(docs)} documents")
+except Exception as e:
+    print(f"ERROR initializing RAG pipeline: {e}")
+    print("The API will still run but RAG features may not work.")
+    hybrid_retriever = None
 
 # Example usage
 if __name__ == "__main__":
