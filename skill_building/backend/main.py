@@ -51,6 +51,13 @@ def health():
 @app.get("/quiz/{course_id}")
 def get_quiz(course_id: int):
     try:
+        if hybrid_retriever is None:
+            return {
+                "error": "RAG system not initialized. Please check backend logs and ensure HuggingFace API token is set.",
+                "questions": ["Sample Question: What is the 50/30/20 budgeting rule?"], 
+                "sources": ["RAG system not available - using sample data"]
+            }
+        
         # Example: Adapt question based on course/user
         question = "What are key budgeting strategies for beginners?"  # Dynamic in full impl
         result = query_rag(question, hybrid_retriever)
@@ -59,18 +66,29 @@ def get_quiz(course_id: int):
             "sources": [doc.page_content for doc in result["source_documents"]]
         }
     except Exception as e:
-        return {"error": str(e), "questions": [], "sources": []}
+        import traceback
+        traceback.print_exc()
+        return {"error": str(e), "questions": ["Error loading quiz"], "sources": []}
 
 # Updated Scenario Endpoint
 @app.post("/generate/scenario")
 def generate_scenario(request: ScenarioRequest):
     try:
+        if hybrid_retriever is None:
+            return {
+                "error": "RAG system not initialized. Please check backend logs and ensure HuggingFace API token is set.",
+                "scenario": f"Sample scenario for {request.topic}: This is a placeholder. The RAG system needs to be initialized with a valid HuggingFace API token.",
+                "sources": ["RAG system not available"]
+            }
+        
         result = query_rag(request.topic, hybrid_retriever)
         return {
             "scenario": result["result"], 
             "sources": [doc.page_content for doc in result["source_documents"]]
         }
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {"error": str(e), "scenario": "Unable to generate scenario", "sources": []}
 
 # Run: uvicorn main:app --reload --host 0.0.0.0 --port 8000
