@@ -2,7 +2,7 @@ from langchain_community.document_loaders import PyPDFLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain_huggingface import HuggingFaceEndpoint
+from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.retrievers import BM25Retriever, EnsembleRetriever
@@ -52,11 +52,15 @@ text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20
 # You can switch to "FinanceMTEB/FinE5" for finance-specific embeddings (slower first load)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-llm = HuggingFaceEndpoint(
-    repo_id="google/flan-t5-large", 
-    temperature=0.7,
-    max_new_tokens=512
+# Use HuggingFace with conversational model
+llm_endpoint = HuggingFaceEndpoint(
+    repo_id="HuggingFaceH4/zephyr-7b-beta",
+    task="conversational",
+    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
 )
+
+# Wrap in ChatHuggingFace for better compatibility
+llm = ChatHuggingFace(llm=llm_endpoint)
 
 # Build hybrid vector store
 def build_hybrid_retriever(docs):

@@ -59,7 +59,7 @@ def get_quiz(course_id: int):
             }
         
         # Example: Adapt question based on course/user
-        question = "What are key budgeting strategies for beginners?"  # Dynamic in full impl
+        question = "Generate ONE clear, specific quiz question about budgeting strategies for beginners. Make it concise and educational."
         result = query_rag(question, hybrid_retriever)
         return {
             "questions": [result["result"]], 
