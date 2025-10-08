@@ -1,113 +1,283 @@
-# Amazon ETL with Neon Database
+# 💰 Financial Literacy Skill Building Platform
 
-This project contains a comprehensive ETL pipeline for processing **Amazon product data** and **NYC taxi trip data**, storing them in Neon Database (serverless PostgreSQL) with Grafana visualization.
+An AI-powered financial literacy platform that uses RAG (Retrieval-Augmented Generation) technology to provide personalized learning experiences, adaptive quizzes, and real-world financial scenarios.
 
-## 📊 **[📈 Comprehensive Data Analysis →](DATA_ANALYSIS_README.md)**
-*For detailed insights, business intelligence, and data patterns analysis*
+## 🌟 Features
 
-## Prerequisites
+- **AI-Powered Learning**: Leverages RAG with HuggingFace models for accurate, context-aware financial education
+- **Adaptive Quizzes**: Questions tailored to your skill level
+- **Real-World Scenarios**: Practice decision-making with realistic financial situations
+- **Comprehensive Topics**: Budgeting, investing, emergency funds, debt management, and more
+- **Modern UI**: Built with Vue 3 and Tailwind CSS for a beautiful, responsive experience
 
-- Docker Desktop installed and running
-- Docker Compose installed
+## 🏗️ Architecture
 
-## Project Structure
+### Backend
+- **FastAPI**: High-performance Python web framework
+- **LangChain**: RAG pipeline orchestration
+- **HuggingFace**: LLM (Mixtral-8x7B) and embeddings (FinE5)
+- **FAISS**: Vector database for semantic search
+- **BM25**: Sparse retrieval for keyword matching
+- **SQLite**: Lightweight database for user data
 
-```
-Amazon/
-├── data/
-│   └── amazon.csv          # Input CSV data
-├── etl/
-│   └── extract_transform.py # ETL script
-├── db/                     # Database initialization scripts
-├── grafana/               # Grafana configuration
-├── Dockerfile             # Docker image definition
-├── docker-compose.yml     # Multi-container setup
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables
-└── README.md             # This file
-```
+### Frontend
+- **Vue 3**: Progressive JavaScript framework
+- **Vite**: Next-generation frontend tooling
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vue Router**: Client-side routing
+- **Axios**: HTTP client for API calls
 
-## Quick Start
+## 📋 Prerequisites
 
-1. **Start Docker Desktop**
-   ```bash
-   open -a Docker  # On macOS
-   ```
+- Python 3.9+
+- Node.js 18+
+- HuggingFace API Token (free at https://huggingface.co/settings/tokens)
 
-2. **Build and run the containers**
-   ```bash
-   docker-compose up --build
-   ```
+## 🚀 Quick Start
 
-3. **Access services**
-   - Neon Database: Serverless PostgreSQL (automatically managed)
-   - Grafana: `http://localhost:3001`
-
-4. **Run individual ETL processes**
-   ```bash
-   # Run Amazon product ETL
-   ./run.sh etl
-
-   # Run NYC Taxi ETL (Docker)
-   ./run.sh nyc
-
-   # Run NYC Taxi ETL (directly on host)
-   ./run.sh nyc-local
-   ```
-
-## Manual Steps
-
-### 1. Build the Docker image
-```bash
-docker build -t amazon-etl .
-```
-#!/usr/bin/env bash
-
-# Security — RAG security demo
-
-This repository contains a small demo showing hardened local checks for RAG (Retrieval-Augmented Generation) in a legal context. It is intended for demonstration and testing only.
-
-Quick start
-
-1. Create a virtual environment and activate it:
+### 1. Clone the Repository
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+git clone https://github.com/LakshmiSravya123/Skill_building.git
+cd Skill_building
 ```
 
-2. Install dependencies:
+### 2. Backend Setup
 
 ```bash
-python -m pip install -r requirements.txt
+# Navigate to backend directory
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env and add your HuggingFace API token:
+# HUGGINGFACEHUB_API_TOKEN=your_token_here
 ```
 
-3. Run tests:
+### 3. Frontend Setup
 
 ```bash
-python -m pytest -q
+# Open a new terminal and navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
 ```
 
-Usage (demo)
+### 4. Run the Application
 
-See `main.py` for a minimal example. In short, create an `EncryptedVectorStore`, wrap it with `RAGSecureWrapper`, and call `query()` with a valid auth token (the tests show a small example).
+**Terminal 1 - Backend:**
+```bash
+cd backend
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
 
-CI
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
 
-This repository includes a GitHub Actions workflow at `.github/workflows/ci.yml` that runs the test suite for pull requests and pushes.
+### 5. Access the Application
 
-Important notes
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
 
-- The `cryptography` package is optional for demo runs; the code will fallback to base64 encoding when unavailable — this is NOT secure and only for local testing.
-- Do not use this code as-is in production for handling real PII or client data without additional safeguards and legal review.
+## 📁 Project Structure
 
-Contributing
+```
+skill_building/
+├── backend/
+│   ├── main.py                 # FastAPI application
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env                    # Environment variables (not in git)
+│   ├── .env.example           # Environment template
+│   └── rag/
+│       ├── pipeline.py        # RAG implementation
+│       └── documents/         # Financial literacy documents
+│           ├── budgeting_basics.txt
+│           ├── investing_fundamentals.txt
+│           └── emergency_fund.txt
+├── frontend/
+│   ├── package.json           # Node dependencies
+│   ├── vite.config.js         # Vite configuration
+│   ├── tailwind.config.js     # Tailwind CSS config
+│   ├── index.html             # Entry HTML
+│   └── src/
+│       ├── main.js            # Vue app entry
+│       ├── App.vue            # Root component
+│       ├── router/
+│       │   └── index.js       # Route definitions
+│       ├── views/
+│       │   ├── Home.vue       # Landing page
+│       │   └── Courses.vue    # Course catalog
+│       └── components/
+│           ├── Quiz.vue       # Adaptive quiz
+│           └── Scenario.vue   # Financial scenarios
+└── README.md
+```
 
-1. Create a branch for your change: `git checkout -b feature/your-change`
-2. Run tests: `python -m pytest -q`
-3. Commit and push to a branch and open a pull request.
+## 🔧 Configuration
 
-Contact
+### Backend Configuration
 
-For questions about this demo, open an issue in the repository.
-   - Try running with `sudo` if on Linux
+Edit `backend/.env`:
+
+```env
+# Required: HuggingFace API Token
+HUGGINGFACEHUB_API_TOKEN=your_token_here
+
+# Optional: Database (defaults to SQLite)
+DATABASE_URL=sqlite:///./skill_building.db
+
+# For PostgreSQL:
+# DATABASE_URL=postgresql://user:password@localhost/dbname
+```
+
+### Frontend Configuration
+
+The frontend is pre-configured to proxy API requests to `http://localhost:8000`. If your backend runs on a different port, edit `frontend/vite.config.js`:
+
+```javascript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:YOUR_PORT',
+      // ...
+    }
+  }
+}
+```
+
+## 📚 API Endpoints
+
+### Health Check
+- `GET /` - API status
+- `GET /health` - Health check
+
+### Quiz
+- `GET /quiz/{course_id}` - Get quiz questions for a course
+
+### Scenarios
+- `POST /generate/scenario` - Generate financial scenario
+  ```json
+  {
+    "topic": "Market Crash"
+  }
+  ```
+
+## 🧪 Testing the RAG Pipeline
+
+Test the RAG system directly:
+
+```bash
+cd backend
+python -m rag.pipeline
+```
+
+This will run a sample query and display results.
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**Issue**: `ModuleNotFoundError: No module named 'langchain'`
+- **Solution**: Ensure virtual environment is activated and dependencies are installed:
+  ```bash
+  source venv/bin/activate
+  pip install -r requirements.txt
+  ```
+
+**Issue**: `Error loading documents`
+- **Solution**: Verify documents exist in `backend/rag/documents/`
+
+**Issue**: `HuggingFace API token not found`
+- **Solution**: Add your token to `backend/.env`:
+  ```
+  HUGGINGFACEHUB_API_TOKEN=your_token_here
+  ```
+
+### Frontend Issues
+
+**Issue**: `Cannot find module 'vue'`
+- **Solution**: Install dependencies:
+  ```bash
+  npm install
+  ```
+
+**Issue**: API requests fail with CORS error
+- **Solution**: Ensure backend is running on port 8000 and CORS is configured in `main.py`
+
+**Issue**: `Failed to resolve import`
+- **Solution**: Clear cache and reinstall:
+  ```bash
+  rm -rf node_modules package-lock.json
+  npm install
+  ```
+
+## 🔒 Security Notes
+
+- Never commit `.env` files to version control
+- The `.env` file contains sensitive API tokens
+- Use `.env.example` as a template for team members
+- For production, use environment variables or secret management services
+
+## 🚀 Deployment
+
+### Backend Deployment
+- Use services like Railway, Render, or AWS
+- Set environment variables in the platform
+- Ensure Python 3.9+ is available
+- Install dependencies from `requirements.txt`
+
+### Frontend Deployment
+- Build the frontend: `npm run build`
+- Deploy the `dist/` folder to Netlify, Vercel, or similar
+- Update API proxy configuration for production backend URL
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 👥 Authors
+
+- LakshmiSravya123
+
+## 🙏 Acknowledgments
+
+- HuggingFace for LLM and embedding models
+- LangChain for RAG framework
+- FastAPI for the backend framework
+- Vue.js team for the frontend framework
+
+## 📧 Support
+
+For issues and questions:
+- Open an issue on GitHub
+- Check existing issues for solutions
+
+---
+
+**Happy Learning! 💡📚**
