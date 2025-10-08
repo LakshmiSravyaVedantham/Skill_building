@@ -9,19 +9,24 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-
 app = FastAPI(title="Skill Building API", version="1.0.0")
 
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:8080"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "https://frontend-j4akmsr1p-sravyas-projects-f5209810.vercel.app",
+        "https://*.vercel.app"  # Allow all Vercel preview deployments
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Database setup - Using SQLite for simplicity
+{{ ... }}
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./skill_building.db")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
