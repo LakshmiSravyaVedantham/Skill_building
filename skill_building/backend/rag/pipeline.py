@@ -47,9 +47,16 @@ def load_documents(directory=None):
 
 # Initialize components with advanced embeddings
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-embeddings = HuggingFaceEmbeddings(model_name="FinanceMTEB/FinE5")  # Enhanced: Finance-specific model
 
-llm = HuggingFaceEndpoint(repo_id="mistralai/Mixtral-8x7B-Instruct-v0.1", temperature=0.7)
+# Use lighter, faster embedding model for quicker startup
+# You can switch to "FinanceMTEB/FinE5" for finance-specific embeddings (slower first load)
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+
+llm = HuggingFaceEndpoint(
+    repo_id="google/flan-t5-large", 
+    temperature=0.7,
+    max_new_tokens=512
+)
 
 # Build hybrid vector store
 def build_hybrid_retriever(docs):
