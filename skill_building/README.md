@@ -2,6 +2,8 @@
 
 An AI-powered financial literacy platform that uses RAG (Retrieval-Augmented Generation) technology to provide personalized learning experiences, adaptive quizzes, and real-world financial scenarios.
 
+> **🚀 NEW: Simple Mode Available!** Run the app instantly without any API keys. See [QUICK_START.md](QUICK_START.md) for details.
+
 ## 🌟 Features
 
 - **AI-Powered Learning**: Leverages RAG with HuggingFace models for accurate, context-aware financial education
