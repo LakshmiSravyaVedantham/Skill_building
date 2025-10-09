@@ -5,7 +5,7 @@ from langchain_community.vectorstores import FAISS
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
-from langchain.retrievers import BM25Retriever, EnsembleRetriever
+from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
 import os
 from dotenv import load_dotenv
 
