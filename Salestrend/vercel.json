@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "Salestrend/api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "Salestrend/dashboard/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "Salestrend/api/index.py"
+    },
+    {
+      "src": "/dashboard/(.*)",
+      "dest": "/Salestrend/dashboard/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/Salestrend/dashboard/index.html"
+    }
+  ]
+}

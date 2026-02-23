@@ -1,168 +1,283 @@
-# Amazon ETL with Neon Database
+# 💰 Financial Literacy Skill Building Platform
 
-This project contains a comprehensive ETL pipeline for processing **Amazon product data** and **NYC taxi trip data**, storing them in Neon Database (serverless PostgreSQL) with Grafana visualization.
+An AI-powered financial literacy platform that uses RAG (Retrieval-Augmented Generation) technology to provide personalized learning experiences, adaptive quizzes, and real-world financial scenarios.
 
-## 📊 **[📈 Comprehensive Data Analysis →](DATA_ANALYSIS_README.md)**
-*For detailed insights, business intelligence, and data patterns analysis*
+## 🌟 Features
 
-## Prerequisites
+- **AI-Powered Learning**: Leverages RAG with HuggingFace models for accurate, context-aware financial education
+- **Adaptive Quizzes**: Questions tailored to your skill level
+- **Real-World Scenarios**: Practice decision-making with realistic financial situations
+- **Comprehensive Topics**: Budgeting, investing, emergency funds, debt management, and more
+- **Modern UI**: Built with Vue 3 and Tailwind CSS for a beautiful, responsive experience
 
-- Docker Desktop installed and running
-- Docker Compose installed
+## 🏗️ Architecture
 
-## Project Structure
+### Backend
+- **FastAPI**: High-performance Python web framework
+- **LangChain**: RAG pipeline orchestration
+- **HuggingFace**: LLM (Mixtral-8x7B) and embeddings (FinE5)
+- **FAISS**: Vector database for semantic search
+- **BM25**: Sparse retrieval for keyword matching
+- **SQLite**: Lightweight database for user data
 
-```
-Amazon/
-├── data/
-│   └── amazon.csv          # Input CSV data
-├── etl/
-│   └── extract_transform.py # ETL script
-├── db/                     # Database initialization scripts
-├── grafana/               # Grafana configuration
-├── Dockerfile             # Docker image definition
-├── docker-compose.yml     # Multi-container setup
-├── requirements.txt       # Python dependencies
-├── .env                   # Environment variables
-└── README.md             # This file
-```
+### Frontend
+- **Vue 3**: Progressive JavaScript framework
+- **Vite**: Next-generation frontend tooling
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vue Router**: Client-side routing
+- **Axios**: HTTP client for API calls
 
-## Quick Start
+## 📋 Prerequisites
 
-1. **Start Docker Desktop**
-   ```bash
-   open -a Docker  # On macOS
-   ```
+- Python 3.9+
+- Node.js 18+
+- HuggingFace API Token (free at https://huggingface.co/settings/tokens)
 
-2. **Build and run the containers**
-   ```bash
-   docker-compose up --build
-   ```
+## 🚀 Quick Start
 
-3. **Access services**
-   - Neon Database: Serverless PostgreSQL (automatically managed)
-   - Grafana: `http://localhost:3001`
-
-4. **Run individual ETL processes**
-   ```bash
-   # Run Amazon product ETL
-   ./run.sh etl
-
-   # Run NYC Taxi ETL (Docker)
-   ./run.sh nyc
-
-   # Run NYC Taxi ETL (directly on host)
-   ./run.sh nyc-local
-   ```
-
-## Manual Steps
-
-### 1. Build the Docker image
-```bash
-docker build -t amazon-etl .
-```
-
-### 2. Neon Database Setup
-The project now uses Neon Database (serverless PostgreSQL). No local PostgreSQL container is needed.
-Configure your Neon connection string in the `.env` file:
-```bash
-NEON_DATABASE_URL=postgresql://[user]:[password]@[neon_hostname]/[dbname]?sslmode=require&channel_binding=require
-```
-
-### 3. Run ETL container
-```bash
-docker run --rm \
-  --link amazon_postgres:postgres \
-  -e DB_HOST=postgres \
-  -e DB_USER=username \
-  -e DB_PASSWORD=password \
-  -e DB_NAME=mydb \
-  -v $(pwd)/data:/app/data \
-  amazon-etl
-```
-
-## Environment Variables
-
-The following environment variables can be configured:
-
-- `NEON_DATABASE_URL`: Complete Neon database connection string
-- `DB_HOST`: Neon database hostname
-- `DB_USER`: Neon database username
-- `DB_PASSWORD`: Neon database password
-- `DB_NAME`: Neon database name
-- `DB_PORT`: Database port (default: 5432)
-- `CSV_PATH`: Path to CSV file (default: ./data/amazon.csv)
-
-## Docker Login (Optional)
-
-If you need to push images to Docker Hub:
+### 1. Clone the Repository
 
 ```bash
-docker login -u loginid
-# Enter password: password
+git clone https://github.com/LakshmiSravya123/Skill_building.git
+cd Skill_building
 ```
 
-## Troubleshooting
-
-1. **Docker daemon not running**
-   - Start Docker Desktop application
-   - Wait for Docker to fully initialize
-
-2. **Permission denied errors**
-   - Ensure Docker Desktop has proper permissions
-   - Try running with `sudo` if on Linux
-
-3. **Port conflicts**
-   - Check if ports 5432 or 3000 are already in use
-   - Modify port mappings in docker-compose.yml if needed
-
-4. **CSV file not found**
-   - Ensure `amazon.csv` exists in the `data/` directory
-   - Check file permissions
-
-## Database Tables
-
-### Amazon ETL Tables
-- `raw_products`: Contains all processed Amazon product data (1,463 records)
-- `discount_analysis`: Contains aggregated discount analysis (339 records)
-
-### NYC Taxi ETL Tables
-- `raw_trips`: Contains taxi trip data (1,000 sample records)
-- `hourly_analysis`: Contains trip patterns by hour (24 records)
-- `zonal_analysis`: Contains trip patterns by pickup zone (265+ records)
-
-## 📊 Data Insights & Analysis
-
-This ETL pipeline processes two distinct datasets providing valuable business insights:
-
-### 🛍️ Amazon Product Data Analysis
-- **1,463 products** across electronics and accessories categories
-- **Discount Analysis**: 58% of products offer >50% discounts
-- **Customer Satisfaction**: 89% of products rated 4+ stars
-- **Price Range**: Most products between ₹150-₹500
-- **Top Categories**: USB cables, charging accessories, networking devices
-
-### 🚕 NYC Taxi Trip Analysis
-- **1,000 trip records** with temporal and geographical patterns
-- **Peak Hours**: 8-9 AM and 6-7 PM show highest demand
-- **Fare Patterns**: Airport trips average 40% higher fares
-- **Zone Coverage**: 265+ unique pickup locations across NYC
-- **Seasonal Trends**: Spring data shows consistent demand patterns
-
-**[📈 View Complete Data Analysis →](DATA_ANALYSIS_README.md)**
-
-### NYC Taxi ETL Tables
-- `raw_trips`: Contains processed taxi trip data
-- `hourly_analysis`: Contains hourly aggregated trip statistics
-- `zonal_analysis`: Contains zone-based trip analysis
-
-## Stopping Services
+### 2. Backend Setup
 
 ```bash
-docker-compose down
+# Navigate to backend directory
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On macOS/Linux:
+source venv/bin/activate
+# On Windows:
+# venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env and add your HuggingFace API token:
+# HUGGINGFACEHUB_API_TOKEN=your_token_here
 ```
 
-To remove volumes as well:
+### 3. Frontend Setup
+
 ```bash
-docker-compose down -v
+# Open a new terminal and navigate to frontend directory
+cd frontend
+
+# Install dependencies
+npm install
 ```
+
+### 4. Run the Application
+
+**Terminal 1 - Backend:**
+```bash
+cd backend
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
+npm run dev
+```
+
+### 5. Access the Application
+
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+## 📁 Project Structure
+
+```
+skill_building/
+├── backend/
+│   ├── main.py                 # FastAPI application
+│   ├── requirements.txt        # Python dependencies
+│   ├── .env                    # Environment variables (not in git)
+│   ├── .env.example           # Environment template
+│   └── rag/
+│       ├── pipeline.py        # RAG implementation
+│       └── documents/         # Financial literacy documents
+│           ├── budgeting_basics.txt
+│           ├── investing_fundamentals.txt
+│           └── emergency_fund.txt
+├── frontend/
+│   ├── package.json           # Node dependencies
+│   ├── vite.config.js         # Vite configuration
+│   ├── tailwind.config.js     # Tailwind CSS config
+│   ├── index.html             # Entry HTML
+│   └── src/
+│       ├── main.js            # Vue app entry
+│       ├── App.vue            # Root component
+│       ├── router/
+│       │   └── index.js       # Route definitions
+│       ├── views/
+│       │   ├── Home.vue       # Landing page
+│       │   └── Courses.vue    # Course catalog
+│       └── components/
+│           ├── Quiz.vue       # Adaptive quiz
+│           └── Scenario.vue   # Financial scenarios
+└── README.md
+```
+
+## 🔧 Configuration
+
+### Backend Configuration
+
+Edit `backend/.env`:
+
+```env
+# Required: HuggingFace API Token
+HUGGINGFACEHUB_API_TOKEN=your_token_here
+
+# Optional: Database (defaults to SQLite)
+DATABASE_URL=sqlite:///./skill_building.db
+
+# For PostgreSQL:
+# DATABASE_URL=postgresql://user:password@localhost/dbname
+```
+
+### Frontend Configuration
+
+The frontend is pre-configured to proxy API requests to `http://localhost:8000`. If your backend runs on a different port, edit `frontend/vite.config.js`:
+
+```javascript
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://localhost:YOUR_PORT',
+      // ...
+    }
+  }
+}
+```
+
+## 📚 API Endpoints
+
+### Health Check
+- `GET /` - API status
+- `GET /health` - Health check
+
+### Quiz
+- `GET /quiz/{course_id}` - Get quiz questions for a course
+
+### Scenarios
+- `POST /generate/scenario` - Generate financial scenario
+  ```json
+  {
+    "topic": "Market Crash"
+  }
+  ```
+
+## 🧪 Testing the RAG Pipeline
+
+Test the RAG system directly:
+
+```bash
+cd backend
+python -m rag.pipeline
+```
+
+This will run a sample query and display results.
+
+## 🐛 Troubleshooting
+
+### Backend Issues
+
+**Issue**: `ModuleNotFoundError: No module named 'langchain'`
+- **Solution**: Ensure virtual environment is activated and dependencies are installed:
+  ```bash
+  source venv/bin/activate
+  pip install -r requirements.txt
+  ```
+
+**Issue**: `Error loading documents`
+- **Solution**: Verify documents exist in `backend/rag/documents/`
+
+**Issue**: `HuggingFace API token not found`
+- **Solution**: Add your token to `backend/.env`:
+  ```
+  HUGGINGFACEHUB_API_TOKEN=your_token_here
+  ```
+
+### Frontend Issues
+
+**Issue**: `Cannot find module 'vue'`
+- **Solution**: Install dependencies:
+  ```bash
+  npm install
+  ```
+
+**Issue**: API requests fail with CORS error
+- **Solution**: Ensure backend is running on port 8000 and CORS is configured in `main.py`
+
+**Issue**: `Failed to resolve import`
+- **Solution**: Clear cache and reinstall:
+  ```bash
+  rm -rf node_modules package-lock.json
+  npm install
+  ```
+
+## 🔒 Security Notes
+
+- Never commit `.env` files to version control
+- The `.env` file contains sensitive API tokens
+- Use `.env.example` as a template for team members
+- For production, use environment variables or secret management services
+
+## 🚀 Deployment
+
+### Backend Deployment
+- Use services like Railway, Render, or AWS
+- Set environment variables in the platform
+- Ensure Python 3.9+ is available
+- Install dependencies from `requirements.txt`
+
+### Frontend Deployment
+- Build the frontend: `npm run build`
+- Deploy the `dist/` folder to Netlify, Vercel, or similar
+- Update API proxy configuration for production backend URL
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📝 License
+
+This project is open source and available under the MIT License.
+
+## 👥 Authors
+
+- LakshmiSravya123
+
+## 🙏 Acknowledgments
+
+- HuggingFace for LLM and embedding models
+- LangChain for RAG framework
+- FastAPI for the backend framework
+- Vue.js team for the frontend framework
+
+## 📧 Support
+
+For issues and questions:
+- Open an issue on GitHub
+- Check existing issues for solutions
+
+---
+
+**Happy Learning! 💡📚**
