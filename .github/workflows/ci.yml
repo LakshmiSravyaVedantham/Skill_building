@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-lint-and-test:
+    name: Backend - Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skill_building/backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: skill_building/backend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8 black isort
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --max-complexity=10 --max-line-length=120 --statistics --exit-zero
+
+      - name: Check formatting with black
+        run: black --check --line-length 120 . || true
+
+      - name: Check import sorting
+        run: isort --check-only --profile black . || true
+
+      - name: Verify FastAPI app imports
+        run: python -c "from main import app; print('Backend app imports OK')"
+
+  salestrend-lint:
+    name: Salestrend - Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Salestrend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: Salestrend/requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --max-complexity=10 --max-line-length=120 --statistics --exit-zero
+
+      - name: Verify API module imports
+        run: python -c "from api.index import app; print('Salestrend API imports OK')"
+
+  frontend-build:
+    name: Frontend - Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: skill_building/frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: skill_building/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
