@@ -2,8 +2,10 @@ EEG/
 Amazon/
 security/
 
-# Exclude all other project directories except skill_building
+# Exclude all other project directories except tracked ones
 /*
+!/.github/
 !/skill_building/
+!/Salestrend/
 !.gitignore
 !README.md
