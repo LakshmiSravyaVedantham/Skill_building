@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: skill-building-backend
+    env: python
+    region: oregon
+    plan: free
+    branch: ci/add-github-actions
+    buildCommand: pip install fastapi uvicorn python-dotenv huggingface-hub pydantic
+    startCommand: uvicorn main_lightweight:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: HUGGINGFACEHUB_API_TOKEN
+        sync: false

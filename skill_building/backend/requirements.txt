@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+psycopg2-binary
+pydantic
+python-dotenv
+langchain
+langchain-community
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+pypdf
+rank-bm25
+huggingface-hub
+transformers

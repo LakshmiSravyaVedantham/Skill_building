@@ -1,1 +1,9 @@
 EEG/
+Amazon/
+security/
+
+# Exclude all other project directories except skill_building
+/*
+!/skill_building/
+!.gitignore
+!README.md
